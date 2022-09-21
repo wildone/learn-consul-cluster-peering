@@ -11,14 +11,9 @@ module "eks" {
   eks_managed_node_group_defaults = {
     ami_type = "AL2_x86_64"
 
-    # attach_cluster_primary_security_group = true
-
-    # # Disabling and using externally provided security groups
-    # create_security_group = false
-
-    create_node_security_group            = false # default is true
-    attach_cluster_primary_security_group = true  # default is false
-
+    # Disabling and using externally provided security groups
+    create_security_group = false
+    attach_cluster_primary_security_group = true
   }
 
   node_security_group_tags = {
@@ -40,9 +35,9 @@ module "eks" {
       echo 'foo bar'
       EOT
 
-      # vpc_security_group_ids = [
-      #   aws_security_group.node_group_one.id
-      # ]
+      vpc_security_group_ids = [
+        aws_security_group.node_group_one.id
+      ]
     }
 
     two = {
@@ -58,9 +53,9 @@ module "eks" {
       echo 'foo bar'
       EOT
 
-      # vpc_security_group_ids = [
-      #   aws_security_group.node_group_two.id
-      # ]
+      vpc_security_group_ids = [
+        aws_security_group.node_group_two.id
+      ]
     }
   }
 }
