@@ -19,7 +19,7 @@ Here is a sample workflow on using this repository. For more details, please vis
 
 1. Deploy Kubernetes clusters
 
-	```shell-session
+    ```shell-session
     terraform -chdir=dc1 apply
     terraform -chdir=dc2 apply
     aws eks --region $(terraform -chdir=dc1 output -raw region) update-kubeconfig --name $(terraform -chdir=dc1 output -raw cluster_name) --alias=dc1
@@ -28,7 +28,7 @@ Here is a sample workflow on using this repository. For more details, please vis
 
 2. Deploy Consul with consul-k8s
 
-	```shell-session
+    ```shell-session
     consul-k8s install -context=dc1 -config-file=k8s-yamls/consul-helm.yaml --set=global.datacenter=dc1
     consul-k8s install -context=dc2 -config-file=k8s-yamls/consul-helm.yaml --set=global.datacenter=dc2
     ```
@@ -43,14 +43,14 @@ Here is a sample workflow on using this repository. For more details, please vis
 
   * Deploy rest of app on second cluster
 
-  	```shell-session
+      ```shell-session
     for service in {products-api,postgres}; do kubectl --context=dc2 apply -f hashicups-v1.0.2/$service.yaml; done
     ```
 
 4. Verify deployment
   * Check out deployed services in each datacenter
 
-  	```shell-session
+    ```shell-session
     kubectl --context=dc1 get svc
     kubectl --context=dc2 get svc
     kubectl --context=dc1 get pods
@@ -61,14 +61,14 @@ Here is a sample workflow on using this repository. For more details, please vis
 
   * Open the HashiCups store at http://localhost:8080. Verify you cannot see any products because products-api is not available in dc1
 
-  	```shell-session
+    ```shell-session
     kubectl --context=dc1 port-forward deploy/nginx 8080:80
     ```
 
 5. Peer Consul clusters
   * Create a peering token on dc1 and distribute it to dc2
 
-  	```shell-session
+    ```shell-session
     kubectl --context=dc1 apply -f k8s-yamls/acceptor-on-dc1-for-dc2.yaml
     kubectl --context=dc1 get peeringacceptors
     kubectl --context=dc1 get secrets
@@ -76,21 +76,21 @@ Here is a sample workflow on using this repository. For more details, please vis
 
   * Establish a connection between clusters and verify it
 
-  	```shell-session
+      ```shell-session
     kubectl --context=dc2 apply -f k8s-yamls/dialer-dc2.yaml
     curl http://127.0.0.1:8501/v1/peering/dc2
     ```
 
-6. Export the postgres service and verify it
+6. Export the products-api service and verify it
 
-  	```shell-session
-    kubectl --context=dc2 apply -f 1.13.1-GA/export-postgres.yaml
-    curl "localhost:8501/v1/health/connect/postgres?peer=dc2" | jq # or check the services in the dc1 Consul UI 
+    ```shell-session
+    kubectl --context=dc2 apply -f k8s-yamls/exportedsvc-products-api.yaml
+    curl "localhost:8501/v1/health/connect/products-api?peer=dc2" | jq # or check the services in the dc1 Consul UI 
     ```
 
 7. Modify the public-api to connect to dc2's products-api as upstream
 
-  	```shell-session
+    ```shell-session
     kubectl --context=dc1 apply -f k8s-yamls/public-api-peer.yaml
     ```
 
@@ -98,19 +98,19 @@ Here is a sample workflow on using this repository. For more details, please vis
 
 9. Remove exported service (optional)
 
-  	```shell-session
+    ```shell-session
     kubectl --context=dc2 delete -f k8s-yamls/exportedsvc-products-api.yaml
     ```
 
 10. Remove cluster peering (optional)
-  	```shell-session
+    ```shell-session
     kubectl --context=dc2 delete -f k8s-yamls/dialer-dc2.yaml
     kubectl --context=dc1 delete -f k8s-yamls/acceptor-on-dc1-for-dc2.yaml
     ```
 
 11. Destroy environment
 
-  	```shell-session
+    ```shell-session
     consul-k8s uninstall -context=dc1
     consul-k8s uninstall -context=dc2
     kubectl --context=dc1 get svc --namespace consul
