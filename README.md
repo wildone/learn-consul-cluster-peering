@@ -20,6 +20,10 @@ Here is a sample workflow on using this repository. For more details, please vis
 1. Deploy Kubernetes clusters
 
     ```shell-session
+
+    terraform -chdir=dc1 init
+    terraform -chdir=dc2 init
+
     terraform -chdir=dc1 apply
     terraform -chdir=dc2 apply
     aws eks --region $(terraform -chdir=dc1 output -raw region) update-kubeconfig --name $(terraform -chdir=dc1 output -raw cluster_name) --alias=dc1
