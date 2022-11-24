@@ -1,13 +1,20 @@
 global:
-  image: "hashicorp/consul:1.13.2"
+  image: "hashicorp/consul:1.14.1"
+  imageK8S: "hashicorp/consul-k8s-control-plane:1.0.1"
   peering:
     enabled: true
   gossipEncryption:
     autoGenerate: true
   tls:
-    enabled: true
+    enabled: true # mandatory for cluster peering
     enableAutoEncrypt: true
     verify: true
+  acls:
+    manageSystemACLs: true
+
+dns:
+  enabled: true
+  enableRedirection: true
 
 server:
  replicas: 1
@@ -21,7 +28,7 @@ connectInject:
   enabled: true
 
 meshGateway:
-  enabled: true
+  enabled: true # mandatory for k8s cluster peering
   replicas: 1
 
 controller:
