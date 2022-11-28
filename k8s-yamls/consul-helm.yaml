@@ -3,8 +3,6 @@ global:
   imageK8S: "hashicorp/consul-k8s-control-plane:1.0.1"
   peering:
     enabled: true
-  gossipEncryption:
-    autoGenerate: true
   tls:
     enabled: true # mandatory for cluster peering
     enableAutoEncrypt: true
