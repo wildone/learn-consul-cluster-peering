@@ -14,17 +14,6 @@ spec:
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
-  name: products-api
-spec:
-  sources:
-    - name: public-api
-      action: allow
-  destination:
-    name: products-api
----
-apiVersion: consul.hashicorp.com/v1alpha1
-kind: ServiceIntentions
-metadata:
   name: payments
 spec:
   sources:
@@ -32,17 +21,6 @@ spec:
       action: allow
   destination:
     name: payments
----
-apiVersion: consul.hashicorp.com/v1alpha1
-kind: ServiceIntentions
-metadata:
-  name: postgres
-spec:
-  sources:
-    - name: products-api
-      action: allow
-  destination:
-    name: postgres
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions

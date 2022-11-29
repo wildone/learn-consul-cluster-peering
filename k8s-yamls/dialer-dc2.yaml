@@ -1,7 +1,7 @@
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: PeeringDialer
 metadata:
-  name: dc1 ## The name of the peer you want to connect to
+  name: dc1
 spec:
   peer:
     secret:
