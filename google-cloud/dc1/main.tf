@@ -16,6 +16,8 @@ locals {
 resource "google_project_service" "svc" {
   service = "${each.value}.googleapis.com"
 
+  disable_dependent_services = true
+
   for_each = toset([
     "container",
   ])

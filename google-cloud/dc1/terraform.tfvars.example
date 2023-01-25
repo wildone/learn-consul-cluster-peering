@@ -1,0 +1,3 @@
+project = ""
+dc1_zone = "us-central1-a"
+dc2_zone = "us-west1-a"
