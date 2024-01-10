@@ -1,11 +1,11 @@
-locals {
-  cluster_id = "gke_${var.project}_${var.dc2_zone}_${local.cluster_name}"
+output "set-project_command" {
+  value = "gcloud config set project ${var.project}"
 }
 
 output "get-credentials_command" {
-  value = "gcloud container clusters get-credentials --zone ${var.dc2_zone} ${local.cluster_name}"
+  value = "gcloud container clusters get-credentials --zone ${var.zone} dc2"
 }
 
-output "rename-context_cmd" {
-  value = "kubectl config rename-context ${local.cluster_id} dc2"
+output "rename-context_command" {
+  value = "kubectl config rename-context gke_${var.project}_${var.zone}_dc2 dc2"
 }
