@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-network-policy
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ .Values.appLabel | default "app" }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow SSH access from 10.0.0.0/8 on port 22
+    - from:
+        - ipBlock:
+            cidr: "10.0.0.0/8"
+      ports:
+        - protocol: TCP
+          port: 22
+
+    # Allow traffic on port 8300 from anywhere (0.0.0.0/0)
+    - from:
+        - ipBlock:
+            cidr: "0.0.0.0/0"
+      ports:
+        - protocol: TCP
+          port: 8500
+
+  egress:
+    # Allow outbound traffic on port 8300 to anywhere (0.0.0.0/0)
+    - to:
+        - ipBlock:
+            cidr: "0.0.0.0/0"
+      ports:
+        - protocol: TCP
+          port: 8500

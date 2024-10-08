@@ -17,3 +17,37 @@ This repository has borrowed code from the following other repositories. Thank y
 
 - https://github.com/vanphan24/cluster-peering-demo
 - https://github.com/hashicorp/learn-terraform-provision-aks-cluster
+
+## Docker Desktop
+
+Create a Kubernetes cluster in Docker Desktop.
+
+### Generate kubeconfig
+
+```powershell
+kubectl config view --minify --flatten > docker-desktop/dc1/edge/kubeconfig_edge
+```
+
+### Install
+
+```powershell
+terraform -chdir=docker-desktop/dc1 apply -auto-approve 
+```
+
+### Uninstall
+
+```powershell
+terraform -chdir=docker-desktop/dc1 destroy -auto-approve
+```
+
+### Check if it works
+
+```powershell
+kubectl get pods --all-namespaces
+```
+
+### Check errors
+
+```powershell
+kubectl get events --all-namespaces  --sort-by='.metadata.creationTimestamp'
+```
